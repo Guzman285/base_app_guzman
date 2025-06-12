@@ -9,7 +9,6 @@ use Model\Usuarios;
 
 class LoginController extends ActiveRecord
 {
-
     public static function renderizarPagina(Router $router)
     {
         $router->render('login/index', [], 'layouts/layoutLogin');
@@ -18,7 +17,7 @@ class LoginController extends ActiveRecord
     public static function loginAPI()
     {
         getHeadersApi();
-        
+
         if (empty($_POST['usuario_correo'])) {
             http_response_code(400);
             echo json_encode([
@@ -50,7 +49,7 @@ class LoginController extends ActiveRecord
             $correo = filter_var($_POST['usuario_correo'], FILTER_SANITIZE_EMAIL);
             $contraseña = $_POST['usuario_contra'];
             $usuarios = Usuarios::where('usuario_correo', $correo);
-            
+
             if (empty($usuarios)) {
                 http_response_code(401);
                 echo json_encode([
@@ -81,11 +80,11 @@ class LoginController extends ActiveRecord
                 return;
             }
 
+            // Generar nuevo token
             $nuevoToken = bin2hex(random_bytes(32));
-
             $usuario->usuario_token = $nuevoToken;
             $resultado = $usuario->guardar();
-            
+
             if (!$resultado['resultado']) {
                 http_response_code(500);
                 echo json_encode([
@@ -95,14 +94,13 @@ class LoginController extends ActiveRecord
                 return;
             }
 
+            // Iniciar sesión
             session_start();
             $_SESSION['auth_user'] = true;
             $_SESSION['usuario_id'] = $usuario->usuario_id;
             $_SESSION['usuario_token'] = $nuevoToken;
             $_SESSION['usuario_nombre'] = $usuario->usuario_nom1 . ' ' . $usuario->usuario_ape1;
             $_SESSION['login'] = true;
-
-            $_SESSION['tiempo_limite'] = time() + (2 * 60 * 60);
 
             http_response_code(200);
             echo json_encode([
@@ -114,8 +112,7 @@ class LoginController extends ActiveRecord
                     'redirect_url' => '/proyecto011/'
                 ]
             ]);
-
-            } catch (Exception $e) {
+        } catch (Exception $e) {
             http_response_code(500);
             echo json_encode([
                 'codigo' => 0,
@@ -133,17 +130,17 @@ class LoginController extends ActiveRecord
         if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', time() - 3600, '/');
         }
-        
+
         header('Location: /proyecto011/login');
         exit;
     }
-    
+
     public static function verificarSesion()
     {
         getHeadersApi();
         session_start();
-        
-        if (!isset($_SESSION['auth_user']) || !isset($_SESSION['tiempo_limite'])) {
+
+        if (!isset($_SESSION['auth_user'])) {
             http_response_code(401);
             echo json_encode([
                 'codigo' => 0,
@@ -152,20 +149,7 @@ class LoginController extends ActiveRecord
             ]);
             return;
         }
-        
-        if (time() > $_SESSION['tiempo_limite']) {
-            session_destroy();
-            http_response_code(401);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'Sesión expirada',
-                'redirect_url' => '/proyecto011/login'
-            ]);
-            return;
-        }
 
-        $_SESSION['tiempo_limite'] = time() + (2 * 60 * 60);
-        
         http_response_code(200);
         echo json_encode([
             'codigo' => 1,

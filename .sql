@@ -1,5 +1,5 @@
 create database proyecto01
-
+select * from usuario
 CREATE TABLE usuario(
 usuario_id SERIAL PRIMARY KEY,
 usuario_nom1 VARCHAR (50) NOT NULL,
@@ -58,6 +58,7 @@ historial_usuario_id INT NOT NULL,
 historial_fecha DATETIME YEAR TO MINUTE,
 historial_ruta INT NOT NULL,
 historial_ejecucion LVARCHAR (1056) NOT NULL,
+historial_status INT,
 historial_situacion SMALLINT DEFAULT 1,
 FOREIGN KEY (historial_usuario_id) REFERENCES usuario(usuario_id),
 FOREIGN KEY (historial_ruta) REFERENCES rutas(ruta_id)

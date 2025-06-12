@@ -17,17 +17,16 @@ class AppController extends ActiveRecord
     {
         getHeadersApi();
 
-        // Validaciones básicas
-        if (empty($_POST['usu_codigo'])) {
+        if (empty($_POST['usuario_correo'])) {
             http_response_code(400);
             echo json_encode([
                 'codigo' => 0,
-                'mensaje' => 'El código de usuario es obligatorio'
+                'mensaje' => 'El correo electrónico es obligatorio'
             ]);
             return;
         }
 
-        if (empty($_POST['usu_password'])) {
+        if (empty($_POST['usuario_contra'])) {
             http_response_code(400);
             echo json_encode([
                 'codigo' => 0,
@@ -37,41 +36,39 @@ class AppController extends ActiveRecord
         }
 
         try {
-            $usuario = filter_var($_POST['usu_codigo'], FILTER_SANITIZE_NUMBER_INT);
-            $contrasena = htmlspecialchars($_POST['usu_password']);
+            $correo = filter_var($_POST['usuario_correo'], FILTER_SANITIZE_EMAIL);
+            $contrasena = htmlspecialchars($_POST['usuario_contra']);
 
-            $queryExisteUser = "SELECT usu_id, usu_nombre, usu_password FROM usuario_login2025 
-                               WHERE usu_codigo = $usuario AND usu_situacion = 1";
+            $query = "SELECT usuario_id, usuario_nom1, usuario_ape1, usuario_contra FROM usuario 
+                      WHERE usuario_correo = '$correo' AND usuario_situacion = 1";
 
-            $existeUsuario = self::fetchFirst($queryExisteUser);
+            $usuarioDB = self::fetchFirst($query);
 
-            if ($existeUsuario) {
-                $passDB = $existeUsuario['usu_password'];
-
-                if (password_verify($contrasena, $passDB)) {
+            if ($usuarioDB) {
+                if (password_verify($contrasena, $usuarioDB['usuario_contra'])) {
                     session_start();
 
-                    $nombreUser = $existeUsuario['usu_nombre'];
-                    $usuarioId = $existeUsuario['usu_id'];
-
-                    $_SESSION['user'] = $nombreUser;
-                    $_SESSION['user_id'] = $usuarioId;
+                    $_SESSION['user'] = $usuarioDB['usuario_nom1'] . ' ' . $usuarioDB['usuario_ape1'];
+                    $_SESSION['user_id'] = $usuarioDB['usuario_id'];
                     $_SESSION['login'] = true;
-                               
-                    // Obtener rol del usuario
-                    $sqlPermisos = "SELECT permiso_rol, rol_nombre_ct FROM permiso_login2025
-                                   INNER JOIN rol_login2025 ON rol_id = permiso_rol
-                                   INNER JOIN usuario_login2025 ON usu_id = permiso_usuario
-                                   WHERE usu_codigo = $usuario AND permiso_login2025.permiso_situacion = 1";
+
+                    // Buscar permisos asignados (considerados como "rol")
+                    $sqlPermisos = "
+                        SELECT p.permiso_clave, p.permiso_nombre
+                        FROM asig_permisos ap
+                        INNER JOIN permiso p ON ap.asignacion_permiso_id = p.permiso_id
+                        WHERE ap.asignacion_usuario_id = {$usuarioDB['usuario_id']} 
+                          AND ap.asignacion_situacion = 1
+                          AND p.permiso_situacion = 1
+                        LIMIT 1
+                    ";
 
                     $permiso = self::fetchFirst($sqlPermisos);
 
                     if ($permiso) {
-                        $_SESSION['rol'] = $permiso['rol_nombre_ct'];
-                        $_SESSION['rol_id'] = $permiso['permiso_rol'];
+                        $_SESSION['rol'] = $permiso['permiso_clave']; // Ej: 'ADMIN', 'USER'
                     } else {
-                        $_SESSION['rol'] = 'USER';
-                        $_SESSION['rol_id'] = 2;
+                        $_SESSION['rol'] = 'USER'; // valor por defecto
                     }
 
                     http_response_code(200);
@@ -79,7 +76,7 @@ class AppController extends ActiveRecord
                         'codigo' => 1,
                         'mensaje' => 'Usuario logueado exitosamente',
                         'datos' => [
-                            'usuario_nombre' => $nombreUser,
+                            'usuario_nombre' => $_SESSION['user'],
                             'rol' => $_SESSION['rol'],
                             'redirect_url' => '/proyecto01/inicio'
                         ]
@@ -88,14 +85,14 @@ class AppController extends ActiveRecord
                     http_response_code(401);
                     echo json_encode([
                         'codigo' => 0,
-                        'mensaje' => 'La contraseña que ingresó es incorrecta'
+                        'mensaje' => 'Contraseña incorrecta'
                     ]);
                 }
             } else {
                 http_response_code(401);
                 echo json_encode([
                     'codigo' => 0,
-                    'mensaje' => 'El usuario que intenta loguearse NO EXISTE'
+                    'mensaje' => 'El usuario no existe o está inactivo'
                 ]);
             }
         } catch (Exception $e) {
@@ -108,24 +105,54 @@ class AppController extends ActiveRecord
         }
     }
 
+    public static function verificarSesion()
+    {
+        getHeadersApi();
+        session_start();
+
+        if (!isset($_SESSION['login'])) {
+            http_response_code(401);
+            echo json_encode([
+                'codigo' => 0,
+                'mensaje' => 'Sesión no válida',
+                'redirect_url' => '/proyecto01/'
+            ]);
+            return;
+        }
+
+        http_response_code(200);
+        echo json_encode([
+            'codigo' => 1,
+            'mensaje' => 'Sesión válida',
+            'datos' => [
+                'usuario_nombre' => $_SESSION['user'],
+                'rol' => $_SESSION['rol']
+            ]
+        ]);
+    }
+
     public static function logout()
     {
-        isAuth();
-        $_SESSION = [];
-        header('Location: /proyecto01/');
+        session_start();
+        session_destroy();
 
+        if (isset($_COOKIE[session_name()])) {
+            setcookie(session_name(), '', time() - 3600, '/');
+        }
+
+        header('Location: /proyecto01/');
+        exit;
     }
-        
+
     public static function renderInicio(Router $router)
     {
         session_start();
-        
-        // Verificar si hay sesión activa
+
         if (!isset($_SESSION['login'])) {
             header('Location: /proyecto01/');
             exit;
         }
-        
+
         $router->render('pages/index', [
             'usuario_nombre' => $_SESSION['user'],
             'rol' => $_SESSION['rol']
