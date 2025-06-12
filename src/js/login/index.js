@@ -12,27 +12,27 @@ document.addEventListener("DOMContentLoaded", () => {
   verificarSesionExistente();
 });
 
-// const verificarSesionExistente = async () => {
-//   try {
-//     const respuesta = await fetch("/proyecto011/login/verificarSesion", {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
+const verificarSesionExistente = async () => {
+  try {
+    const respuesta = await fetch("/proyecto011/login/verificarSesion", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-//     const datos = await respuesta.json();
+    const datos = await respuesta.json();
 
-//     if (datos.codigo === 1) {
-//       console.log("Sesión activa detectada, redirigiendo...");
-//       setTimeout(() => {
-//         window.location.href = "/proyecto011/";
-//       }, 500);
-//     }
-//   } catch (error) {
-//     console.log("No hay sesión activa");
-//   }
-// };
+    if (datos.codigo === 1) {
+      console.log("Sesión activa detectada, redirigiendo...");
+      setTimeout(() => {
+        window.location.href = "/proyecto011/";
+      }, 500);
+    }
+  } catch (error) {
+    console.log("No hay sesión activa");
+  }
+};
 
 // Función para mostrar estado de carga
 const toggleLoadingState = (isLoading) => {

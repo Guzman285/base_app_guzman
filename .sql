@@ -52,6 +52,16 @@ FOREIGN KEY (asignacion_app_id) REFERENCES aplicacion(app_id),
 FOREIGN KEY (asignacion_permiso_id) REFERENCES permiso(permiso_id)
 );
 
+CREATE TABLE rutas(
+ruta_id SERIAL PRIMARY KEY,
+ruta_app_id INT NOT NULL,
+ruta_nombre LVARCHAR (1056) NOT NULL,
+ruta_descripcion VARCHAR (250) NOT NULL,
+ruta_situacion SMALLINT DEFAULT 1,
+FOREIGN KEY (ruta_app_id) REFERENCES aplicacion(app_id)
+);
+
+
 CREATE TABLE historial_act(
 historial_id SERIAL PRIMARY KEY,
 historial_usuario_id INT NOT NULL,
@@ -64,11 +74,3 @@ FOREIGN KEY (historial_usuario_id) REFERENCES usuario(usuario_id),
 FOREIGN KEY (historial_ruta) REFERENCES rutas(ruta_id)
 );
 
-CREATE TABLE rutas(
-ruta_id SERIAL PRIMARY KEY,
-ruta_app_id INT NOT NULL,
-ruta_nombre LVARCHAR (1056) NOT NULL,
-ruta_descripcion VARCHAR (250) NOT NULL,
-ruta_situacion SMALLINT DEFAULT 1,
-FOREIGN KEY (ruta_app_id) REFERENCES aplicacion(app_id)
-);

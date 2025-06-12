@@ -131,17 +131,12 @@ class AppController extends ActiveRecord
         ]);
     }
 
-    public static function logout()
+     public static function logout()
     {
-        session_start();
-        session_destroy();
+        isAuth();
+        $_SESSION = [];
+        header('Location: /proyecto011/');
 
-        if (isset($_COOKIE[session_name()])) {
-            setcookie(session_name(), '', time() - 3600, '/');
-        }
-
-        header('Location: /proyecto01/');
-        exit;
     }
 
     public static function renderInicio(Router $router)
