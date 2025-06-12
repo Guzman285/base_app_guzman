@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="build/js/app.js"></script>
     <link rel="shortcut icon" href="<?= asset('images/cit.png') ?>" type="image/x-icon">
     <link rel="stylesheet" href="<?= asset('build/styles.css') ?>">
-    <title>DemoApp</title>
+    <title>Sistema de Celulares</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark  bg-dark">
@@ -86,7 +86,7 @@
                 <?php else: ?>
                     <div class="col-lg-1 d-grid mb-lg-0 mb-2">
                         <a href="/proyecto011/login" class="btn btn-primary">
-                            <i class="bi bi-box-arrow-in-right"></i>Login
+                            <i class="bi bi-box-arrow-in-right"></i>Exit
                         </a>
                     </div>
                 <?php endif; ?>
