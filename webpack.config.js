@@ -10,10 +10,6 @@ module.exports = {
     'js/aplicacion/index' : './src/js/aplicacion/index.js',
     'js/permisos/index' : './src/js/permisos/index.js',
     'js/asignacionpermisos/index' : './src/js/asignacionpermisos/index.js',
-
-
-
-
   },
   output: {
     filename: '[name].js',

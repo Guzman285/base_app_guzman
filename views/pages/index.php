@@ -95,7 +95,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">Gestión de Usuarios</h5>
                         <p class="card-text text-muted">Administra tu base de usuarios con información completa y segura.</p>
-                        <a href="/proyecto001/usuarios" class="btn btn-primary">Acceder</a>
+                        <a href="/proyecto011/usuarios" class="btn btn-primary">Acceder</a>
                     </div>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">Control de Aplicaciones</h5>
                         <p class="card-text text-muted">Gestiona las aplicaciones del sistema con nombres y configuraciones.</p>
-                        <a href="/proyecto001/aplicacion" class="btn btn-primary">Acceder</a>
+                        <a href="/proyecto011/aplicacion" class="btn btn-primary">Acceder</a>
                     </div>
                 </div>
             </div>
@@ -119,7 +119,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">Sistema de Permisos</h5>
                         <p class="card-text text-muted">Controla el acceso y gestiona permisos por aplicación de forma segura.</p>
-                        <a href="/proyecto001/permisos" class="btn btn-primary">Acceder</a>
+                        <a href="/proyecto011/permisos" class="btn btn-primary">Acceder</a>
                     </div>
                 </div>
             </div>
@@ -131,7 +131,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">Asignación de Permisos</h5>
                         <p class="card-text text-muted">Asigna permisos específicos a usuarios para control de acceso granular.</p>
-                        <a href="/proyecto001/asignacionpermisos" class="btn btn-primary">Acceder</a>
+                        <a href="/proyecto011/asignacionpermisos" class="btn btn-primary">Acceder</a>
                     </div>
                 </div>
             </div>
@@ -143,7 +143,7 @@
                 <p><strong>Organiza:</strong> mantén ordenados todos los datos de usuarios y aplicaciones.</p>
                 <p><strong>Controla:</strong> gestiona permisos y accesos de forma granular y segura.</p>
                 <p><strong>Administra:</strong> supervisa todo el sistema desde una interfaz intuitiva y moderna.</p>
-                <a href="/proyecto001/usuarios" class="btn btn-primary btn-lg mt-3">Comenzar a administrar</a>
+                <a href="/proyecto011/usuarios" class="btn btn-primary btn-lg mt-3">Comenzar a administrar</a>
             </div>
         </div>
     </div>

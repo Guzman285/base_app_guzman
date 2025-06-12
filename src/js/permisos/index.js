@@ -15,7 +15,7 @@ const SelectUsuarioAsigno = document.getElementById('permiso_usuario_asigno');
 const seccionTabla = document.getElementById('seccionTabla');
 
 const cargarUsuarios = async () => {
-    const url = `/proyecto001/permisos/buscarUsuariosAPI`;
+    const url = `/proyecto011/permisos/buscarUsuariosAPI`;
     const config = {
         method: 'GET'
     }
@@ -56,7 +56,7 @@ const cargarUsuarios = async () => {
 }
 
 const cargarAplicaciones = async () => {
-    const url = `/proyecto001/permisos/buscarAplicacionesAPI`;
+    const url = `/proyecto011/permisos/buscarAplicacionesAPI`;
     const config = {
         method: 'GET'
     }
@@ -107,7 +107,7 @@ const guardarPermiso = async e => {
     }
 
     const body = new FormData(formPermiso);
-    const url = "/proyecto001/permisos/guardarAPI";
+    const url = "/proyecto011/permisos/guardarAPI";
     const config = {
         method: 'POST',
         body
@@ -147,7 +147,7 @@ const guardarPermiso = async e => {
 }
 
 const BuscarPermisos = async () => {
-    const url = `/proyecto001/permisos/buscarAPI`;
+    const url = `/proyecto011/permisos/buscarAPI`;
     const config = {
         method: 'GET'
     }
@@ -336,7 +336,7 @@ const ModificarPermiso = async (event) => {
     }
 
     const body = new FormData(formPermiso);
-    const url = '/proyecto001/permisos/modificarAPI';
+    const url = '/proyecto011/permisos/modificarAPI';
     const config = {
         method: 'POST',
         body
@@ -390,7 +390,7 @@ const EliminarPermisos = async (e) => {
     });
 
     if (AlertaConfirmarEliminar.isConfirmed) {
-        const url = `/proyecto001/permisos/eliminar?id=${idPermiso}`;
+        const url = `/proyecto011/permisos/eliminar?id=${idPermiso}`;
         const config = {
             method: 'GET'
         }
