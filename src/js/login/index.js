@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const verificarSesionExistente = async () => {
   try {
-    const respuesta = await fetch("/proyecto011/login/verificarSesion", {
+    const respuesta = await fetch("/proyecto11/login/verificarSesion", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -26,7 +26,7 @@ const verificarSesionExistente = async () => {
     if (datos.codigo === 1) {
       console.log("Sesión activa detectada, redirigiendo...");
       setTimeout(() => {
-        window.location.href = "/proyecto011/";
+        window.location.href = "/proyecto11/inicio";
       }, 500);
     }
   } catch (error) {
@@ -105,7 +105,7 @@ const loginAPI = async (e) => {
 
   try {
     const body = new FormData(formLogin);
-    const url = "/proyecto011/login/loginAPI";
+    const url = "/proyecto11/login/loginAPI";
     const config = {
       method: "POST",
       body,
@@ -194,13 +194,14 @@ export const cerrarSesion = async () => {
   });
 
   if (confirmacion.isConfirmed) {
-    window.location.href = "/proyecto011/login/logout";
+    window.location.href = "/proyecto11/login/logout";
   }
 };
 
+// Verificar sesión cada 5 minutos
 setInterval(async () => {
   try {
-    const respuesta = await fetch("/proyecto011/login/verificarSesion");
+    const respuesta = await fetch("/proyecto11/login/verificarSesion");
     const datos = await respuesta.json();
 
     if (datos.codigo === 0) {
@@ -210,7 +211,7 @@ setInterval(async () => {
         text: "Su sesión ha expirado. Será redirigido al login.",
         confirmButtonText: "Entendido",
       });
-      window.location.href = "/proyecto011/login";
+      window.location.href = "/proyecto11/login";
     }
   } catch (error) {
     console.error("Error verificando sesión:", error);

@@ -16,17 +16,18 @@ function s($html) {
 // Función que revisa que el usuario este autenticado
 function isAuth() {
     session_start();
-    if(!isset($_SESSION['login'])) {
-        header('Location: /');
+    if(!isset($_SESSION['auth_user']) || !isset($_SESSION['login'])) {
+        header('Location: /proyecto11/login');
+        exit;
     }
 }
+
 function isAuthApi() {
     getHeadersApi();
     session_start();
-    if(!isset($_SESSION['auth_user'])) {
+    if(!isset($_SESSION['auth_user']) || !isset($_SESSION['login'])) {
         echo json_encode([    
-            "mensaje" => "No esta autenticado",
-
+            "mensaje" => "No está autenticado",
             "codigo" => 4,
         ]);
         exit;
@@ -35,23 +36,21 @@ function isAuthApi() {
 
 function isNotAuth(){
     session_start();
-    if(isset($_SESSION['auth'])) {
-        header('Location: /auth/');
+    if(isset($_SESSION['auth_user'])) {
+        header('Location: /proyecto11/inicio');
+        exit;
     }
 }
 
-
 function hasPermission(array $permisos){
-
     $comprobaciones = [];
     foreach ($permisos as $permiso) {
-
         $comprobaciones[] = !isset($_SESSION[$permiso]) ? false : true;
-      
     }
 
     if(array_search(true, $comprobaciones) !== false){}else{
-        header('Location: /');
+        header('Location: /proyecto11/login');
+        exit;
     }
 }
 
@@ -59,15 +58,12 @@ function hasPermissionApi(array $permisos){
     getHeadersApi();
     $comprobaciones = [];
     foreach ($permisos as $permiso) {
-
         $comprobaciones[] = !isset($_SESSION[$permiso]) ? false : true;
-      
     }
 
     if(array_search(true, $comprobaciones) !== false){}else{
         echo json_encode([     
             "mensaje" => "No tiene permisos",
-
             "codigo" => 4,
         ]);
         exit;
@@ -79,5 +75,5 @@ function getHeadersApi(){
 }
 
 function asset($ruta){
-    return "/". $_ENV['APP_NAME']."/public/" . $ruta;
+    return "/proyecto11/public/" . $ruta;
 }
