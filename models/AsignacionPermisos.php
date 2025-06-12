@@ -1,12 +1,11 @@
 <?php
-// crea nombre de espacio Model
+
 namespace Model;
-// Importa la clase ActiveRecord del nombre de espacio Model
+
 use Model\ActiveRecord;
-// Crea la clase de instancia AsigPermisos y hereda las funciones de ActiveRecord
-class AsigPermisos extends ActiveRecord {
+
+class AsignacionPermisos extends ActiveRecord {
     
-    // Crea las propiedades de la clase
     public static $tabla = 'asig_permisos';
     public static $idTabla = 'asignacion_id';
     public static $columnasDB = 
@@ -14,13 +13,12 @@ class AsigPermisos extends ActiveRecord {
         'asignacion_usuario_id',
         'asignacion_app_id',
         'asignacion_permiso_id',
-        'asignacion_fecha',
+        //'asignacion_fecha',
         'asignacion_usuario_asigno',
         'asignacion_motivo',
         'asignacion_situacion'
     ];
     
-    // Crea las variables para almacenar los datos
     public $asignacion_id;
     public $asignacion_usuario_id;
     public $asignacion_app_id;
@@ -36,10 +34,15 @@ class AsigPermisos extends ActiveRecord {
         $this->asignacion_usuario_id = $asignacion['asignacion_usuario_id'] ?? 0;
         $this->asignacion_app_id = $asignacion['asignacion_app_id'] ?? 0;
         $this->asignacion_permiso_id = $asignacion['asignacion_permiso_id'] ?? 0;
-        $this->asignacion_fecha = $asignacion['asignacion_fecha'] ?? null;
+        $this->asignacion_fecha = $asignacion['asignacion_fecha'] ?? '';
         $this->asignacion_usuario_asigno = $asignacion['asignacion_usuario_asigno'] ?? 0;
         $this->asignacion_motivo = $asignacion['asignacion_motivo'] ?? '';
         $this->asignacion_situacion = $asignacion['asignacion_situacion'] ?? 1;
+    }
+
+    public static function EliminarAsignacion($id){
+        $sql = "DELETE FROM asig_permisos WHERE asignacion_id = $id";
+        return self::SQL($sql);
     }
 
 }

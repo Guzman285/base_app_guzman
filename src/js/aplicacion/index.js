@@ -3,98 +3,20 @@ import Swal from "sweetalert2";
 import { validarFormulario } from '../funciones';
 import DataTable from "datatables.net-bs5";
 import { lenguaje } from "../lenguaje";
+import { data } from "jquery";
 
-const formPermiso = document.getElementById('formPermiso');
+const formAplicacion = document.getElementById('formAplicacion');
 const BtnGuardar = document.getElementById('BtnGuardar');
 const BtnModificar = document.getElementById('BtnModificar');
 const BtnLimpiar = document.getElementById('BtnLimpiar');
-const BtnBuscarPermisos = document.getElementById('BtnBuscarPermisos');
-const SelectUsuario = document.getElementById('usuario_id');
-const SelectAplicacion = document.getElementById('app_id');
-const SelectUsuarioAsigno = document.getElementById('permiso_usuario_asigno');
+const BtnBuscarAplicaciones = document.getElementById('BtnBuscarAplicaciones');
 const seccionTabla = document.getElementById('seccionTabla');
 
-const cargarUsuarios = async () => {
-    const url = `/proyecto01_macs/permisos/buscarUsuariosAPI`;
-    const config = {
-        method: 'GET'
-    }
-
-    try {
-        const respuesta = await fetch(url, config);
-        const datos = await respuesta.json();
-        const { codigo, mensaje, data } = datos;
-
-        if (codigo == 1) {
-            SelectUsuario.innerHTML = '<option value="">Seleccione un usuario</option>';
-            SelectUsuarioAsigno.innerHTML = '<option value="">Seleccione quién asigna</option>';
-            
-            data.forEach(usuario => {
-                const option = document.createElement('option');
-                option.value = usuario.usuario_id;
-                option.textContent = `${usuario.usuario_nom1} ${usuario.usuario_ape1}`;
-                SelectUsuario.appendChild(option);
-                
-                const option2 = document.createElement('option');
-                option2.value = usuario.usuario_id;
-                option2.textContent = `${usuario.usuario_nom1} ${usuario.usuario_ape1}`;
-                SelectUsuarioAsigno.appendChild(option2);
-            });
-        } else {
-            await Swal.fire({
-                position: "center",
-                icon: "info",
-                title: "Error",
-                text: mensaje,
-                showConfirmButton: true,
-            });
-        }
-
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const cargarAplicaciones = async () => {
-    const url = `/proyecto01_macs/permisos/buscarAplicacionesAPI`;
-    const config = {
-        method: 'GET'
-    }
-
-    try {
-        const respuesta = await fetch(url, config);
-        const datos = await respuesta.json();
-        const { codigo, mensaje, data } = datos;
-
-        if (codigo == 1) {
-            SelectAplicacion.innerHTML = '<option value="">Seleccione una aplicación</option>';
-            
-            data.forEach(app => {
-                const option = document.createElement('option');
-                option.value = app.app_id;
-                option.textContent = app.app_nombre_corto;
-                SelectAplicacion.appendChild(option);
-            });
-        } else {
-            await Swal.fire({
-                position: "center",
-                icon: "info",
-                title: "Error",
-                text: mensaje,
-                showConfirmButton: true,
-            });
-        }
-
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const guardarPermiso = async e => {
+const guardarAplicacion = async e => {
     e.preventDefault();
     BtnGuardar.disabled = true;
 
-    if (!validarFormulario(formPermiso, ['permiso_id', 'permiso_fecha', 'permiso_situacion'])) {
+    if (!validarFormulario(formAplicacion, ['app_id', 'app_fecha_creacion', 'app_situacion'])) {
         Swal.fire({
             position: "center",
             icon: "info",
@@ -106,8 +28,8 @@ const guardarPermiso = async e => {
         return;
     }
 
-    const body = new FormData(formPermiso);
-    const url = "/proyecto01_macs/permisos/guardarAPI";
+    const body = new FormData(formAplicacion);
+    const url = "/proyecto01_macs/aplicacion/guardarAPI";
     const config = {
         method: 'POST',
         body
@@ -129,7 +51,7 @@ const guardarPermiso = async e => {
             });
 
             limpiarTodo();
-            BuscarPermisos();
+            BuscarAplicaciones();
         } else {
             await Swal.fire({
                 position: "center",
@@ -146,8 +68,8 @@ const guardarPermiso = async e => {
     BtnGuardar.disabled = false;
 }
 
-const BuscarPermisos = async () => {
-    const url = `/proyecto01_macs/permisos/buscarAPI`;
+const BuscarAplicaciones = async () => {
+    const url = `/proyecto01_macs/aplicacion/buscarAPI`;
     const config = {
         method: 'GET'
     }
@@ -158,7 +80,7 @@ const BuscarPermisos = async () => {
         const { codigo, mensaje, data } = datos;
 
         if (codigo == 1) {
-            console.log('Permisos encontrados:', data);
+            console.log('Aplicaciones encontradas:', data);
 
             if (datatable) {
                 datatable.clear().draw();
@@ -182,13 +104,13 @@ const BuscarPermisos = async () => {
 const MostrarTabla = () => {
     if (seccionTabla.style.display === 'none') {
         seccionTabla.style.display = 'block';
-        BuscarPermisos();
+        BuscarAplicaciones();
     } else {
         seccionTabla.style.display = 'none';
     }
 }
 
-const datatable = new DataTable('#TablePermisos', {
+const datatable = new DataTable('#TableAplicaciones', {
     dom: `
         <"row mt-3 justify-content-between" 
             <"col" l> 
@@ -206,63 +128,37 @@ const datatable = new DataTable('#TablePermisos', {
     columns: [
         {
             title: 'No.',
-            data: 'permiso_id',
-            width: '5%',
+            data: 'app_id',
+            width: '10%',
             render: (data, type, row, meta) => meta.row + 1
         },
         { 
-            title: 'Usuario', 
-            data: 'usuario_nom1',
-            width: '12%',
-            render: (data, type, row) => {
-                return `${row.usuario_nom1} ${row.usuario_ape1}`;
-            }
+            title: 'Nombre Largo', 
+            data: 'app_nombre_largo',
+            width: '35%'
         },
         { 
-            title: 'Aplicación', 
+            title: 'Nombre Mediano', 
+            data: 'app_nombre_medium',
+            width: '25%'
+        },
+        { 
+            title: 'Nombre Corto', 
             data: 'app_nombre_corto',
-            width: '10%'
-        },
-        { 
-            title: 'Nombre del Permiso', 
-            data: 'permiso_nombre',
             width: '15%'
-        },
-        { 
-            title: 'Clave del Permiso', 
-            data: 'permiso_clave',
-            width: '12%'
-        },
-        { 
-            title: 'Tipo', 
-            data: 'permiso_tipo',
-            width: '8%'
-        },
-        { 
-            title: 'Descripción', 
-            data: 'permiso_desc',
-            width: '15%'
-        },
-        {
-            title: 'Asignado por',
-            data: 'asigno_nom1',
-            width: '12%',
-            render: (data, type, row) => {
-                return `${row.asigno_nom1} ${row.asigno_ape1}`;
-            }
         },
         {
             title: 'Situación',
-            data: 'permiso_situacion',
-            width: '8%',
+            data: 'app_situacion',
+            width: '10%',
             render: (data, type, row) => {
                 return data == 1 ? "ACTIVO" : "INACTIVO";
             }
         },
         {
             title: 'Acciones',
-            data: 'permiso_id',
-            width: '13%',
+            data: 'app_id',
+            width: '5%',
             searchable: false,
             orderable: false,
             render: (data, type, row, meta) => {
@@ -270,14 +166,9 @@ const datatable = new DataTable('#TablePermisos', {
                  <div class='d-flex justify-content-center'>
                      <button class='btn btn-warning modificar mx-1' 
                          data-id="${data}" 
-                         data-usuario="${row.usuario_id || ''}"  
-                         data-app="${row.app_id || ''}"  
-                         data-nombre="${row.permiso_nombre || ''}"  
-                         data-clave="${row.permiso_clave || ''}"  
-                         data-desc="${row.permiso_desc || ''}"
-                         data-tipo="${row.permiso_tipo || ''}"
-                         data-asigno="${row.permiso_usuario_asigno || ''}"
-                         data-motivo="${row.permiso_motivo || ''}"
+                         data-largo="${row.app_nombre_largo || ''}"  
+                         data-medium="${row.app_nombre_medium || ''}"  
+                         data-corto="${row.app_nombre_corto || ''}"
                          title="Modificar">
                          <i class='bi bi-pencil-square me-1'></i> Modificar
                      </button>
@@ -295,15 +186,10 @@ const datatable = new DataTable('#TablePermisos', {
 const llenarFormulario = (event) => {
     const datos = event.currentTarget.dataset;
 
-    document.getElementById('permiso_id').value = datos.id;
-    document.getElementById('usuario_id').value = datos.usuario;
-    document.getElementById('app_id').value = datos.app;
-    document.getElementById('permiso_nombre').value = datos.nombre;
-    document.getElementById('permiso_clave').value = datos.clave;
-    document.getElementById('permiso_desc').value = datos.desc;
-    document.getElementById('permiso_tipo').value = datos.tipo;
-    document.getElementById('permiso_usuario_asigno').value = datos.asigno;
-    document.getElementById('permiso_motivo').value = datos.motivo;
+    document.getElementById('app_id').value = datos.id;
+    document.getElementById('app_nombre_largo').value = datos.largo;
+    document.getElementById('app_nombre_medium').value = datos.medium;
+    document.getElementById('app_nombre_corto').value = datos.corto;
 
     BtnGuardar.classList.add('d-none');
     BtnModificar.classList.remove('d-none');
@@ -314,16 +200,16 @@ const llenarFormulario = (event) => {
 }
 
 const limpiarTodo = () => {
-    formPermiso.reset();
+    formAplicacion.reset();
     BtnGuardar.classList.remove('d-none');
     BtnModificar.classList.add('d-none');
 }
 
-const ModificarPermiso = async (event) => {
+const ModificarAplicacion = async (event) => {
     event.preventDefault();
     BtnModificar.disabled = true;
 
-    if (!validarFormulario(formPermiso, ['permiso_id', 'permiso_fecha', 'permiso_situacion'])) {
+    if (!validarFormulario(formAplicacion, ['app_id', 'app_fecha_creacion', 'app_situacion'])) {
         Swal.fire({
             position: "center",
             icon: "info",
@@ -335,8 +221,8 @@ const ModificarPermiso = async (event) => {
         return;
     }
 
-    const body = new FormData(formPermiso);
-    const url = '/proyecto01_macs/permisos/modificarAPI';
+    const body = new FormData(formAplicacion);
+    const url = '/proyecto01_macs/aplicacion/modificarAPI';
     const config = {
         method: 'POST',
         body
@@ -357,7 +243,7 @@ const ModificarPermiso = async (event) => {
             });
 
             limpiarTodo();
-            BuscarPermisos();
+            BuscarAplicaciones();
         } else {
             await Swal.fire({
                 position: "center",
@@ -374,8 +260,8 @@ const ModificarPermiso = async (event) => {
     BtnModificar.disabled = false;
 }
 
-const EliminarPermisos = async (e) => {
-    const idPermiso = e.currentTarget.dataset.id;
+const EliminarAplicaciones = async (e) => {
+    const idAplicacion = e.currentTarget.dataset.id;
 
     const AlertaConfirmarEliminar = await Swal.fire({
         position: "center",
@@ -390,7 +276,7 @@ const EliminarPermisos = async (e) => {
     });
 
     if (AlertaConfirmarEliminar.isConfirmed) {
-        const url = `/proyecto01_macs/permisos/eliminar?id=${idPermiso}`;
+        const url = `/proyecto01_macs/aplicacion/eliminar?id=${idAplicacion}`;
         const config = {
             method: 'GET'
         }
@@ -409,7 +295,7 @@ const EliminarPermisos = async (e) => {
                     showConfirmButton: true,
                 });
                 
-                BuscarPermisos();
+                BuscarAplicaciones();
             } else {
                 await Swal.fire({
                     position: "center",
@@ -426,13 +312,10 @@ const EliminarPermisos = async (e) => {
     }
 }
 
-cargarUsuarios();
-cargarAplicaciones();
-
-datatable.on('click', '.eliminar', EliminarPermisos);
+datatable.on('click', '.eliminar', EliminarAplicaciones);
 datatable.on('click', '.modificar', llenarFormulario);
-formPermiso.addEventListener('submit', guardarPermiso);
+formAplicacion.addEventListener('submit', guardarAplicacion);
 
 BtnLimpiar.addEventListener('click', limpiarTodo);
-BtnModificar.addEventListener('click', ModificarPermiso);
-BtnBuscarPermisos.addEventListener('click', MostrarTabla);
+BtnModificar.addEventListener('click', ModificarAplicacion);
+BtnBuscarAplicaciones.addEventListener('click', MostrarTabla);
