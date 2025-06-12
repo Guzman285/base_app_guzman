@@ -17,7 +17,7 @@ function s($html) {
 function isAuth() {
     session_start();
     if(!isset($_SESSION['auth_user']) || !isset($_SESSION['login'])) {
-        header('Location: /proyecto11/login');
+        header('Location: /proyecto011/login');
         exit;
     }
 }
@@ -37,7 +37,7 @@ function isAuthApi() {
 function isNotAuth(){
     session_start();
     if(isset($_SESSION['auth_user'])) {
-        header('Location: /proyecto11/inicio');
+        header('Location: /proyecto011/inicio');
         exit;
     }
 }
@@ -49,7 +49,7 @@ function hasPermission(array $permisos){
     }
 
     if(array_search(true, $comprobaciones) !== false){}else{
-        header('Location: /proyecto11/login');
+        header('Location: /proyecto011/login');
         exit;
     }
 }
@@ -75,5 +75,5 @@ function getHeadersApi(){
 }
 
 function asset($ruta){
-    return "/proyecto11/public/" . $ruta;
+    return "/proyecto011/public/" . $ruta;
 }

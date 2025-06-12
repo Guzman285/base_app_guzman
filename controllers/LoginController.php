@@ -1,15 +1,13 @@
 <?php
-
 namespace Controllers;
 
 use Exception;
-use MVC\Router;
 use Model\ActiveRecord;
 use Model\Usuarios;
 
 class LoginController extends ActiveRecord
 {
-    public static function renderizarPagina(Router $router)
+    public static function renderizarPagina($router)
     {
         $router->render('login/index', [], 'layouts/layoutLogin');
     }
@@ -36,21 +34,23 @@ class LoginController extends ActiveRecord
             return;
         }
 
-        if (!filter_var($_POST['usuario_correo'], FILTER_VALIDATE_EMAIL)) {
-            http_response_code(400);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'El formato del correo electrónico no es válido'
-            ]);
-            return;
-        }
-
         try {
             $correo = filter_var($_POST['usuario_correo'], FILTER_SANITIZE_EMAIL);
             $contraseña = $_POST['usuario_contra'];
-            $usuarios = Usuarios::where('usuario_correo', $correo);
 
-            if (empty($usuarios)) {
+            $query = "SELECT 
+                        usuario_id, 
+                        usuario_nom1, 
+                        usuario_ape1, 
+                        usuario_contra,
+                        usuario_correo 
+                      FROM usuario 
+                      WHERE usuario_correo = '$correo' 
+                        AND usuario_situacion = 1";
+
+            $usuarioDB = self::fetchFirst($query);
+
+            if (!$usuarioDB) {
                 http_response_code(401);
                 echo json_encode([
                     'codigo' => 0,
@@ -59,19 +59,7 @@ class LoginController extends ActiveRecord
                 return;
             }
 
-            /** @var Usuarios $usuario */
-            $usuario = $usuarios[0];
-
-            if ($usuario->usuario_situacion != 1) {
-                http_response_code(403);
-                echo json_encode([
-                    'codigo' => 0,
-                    'mensaje' => 'La cuenta de usuario está inactiva'
-                ]);
-                return;
-            }
-
-            if (!password_verify($contraseña, $usuario->usuario_contra)) {
+            if (!password_verify($contraseña, $usuarioDB['usuario_contra'])) {
                 http_response_code(401);
                 echo json_encode([
                     'codigo' => 0,
@@ -80,38 +68,46 @@ class LoginController extends ActiveRecord
                 return;
             }
 
-            // Generar nuevo token
-            $nuevoToken = bin2hex(random_bytes(32));
-            $usuario->usuario_token = $nuevoToken;
-            $resultado = $usuario->guardar();
+            $queryPermisos = "SELECT 
+                                p.permiso_clave, 
+                                p.permiso_nombre
+                              FROM asig_permisos ap
+                              INNER JOIN permiso p ON ap.asignacion_permiso_id = p.permiso_id
+                              WHERE ap.asignacion_usuario_id = {$usuarioDB['usuario_id']} 
+                                AND ap.asignacion_situacion = 1
+                                AND p.permiso_situacion = 1
+                              LIMIT 1";
 
-            if (!$resultado['resultado']) {
-                http_response_code(500);
-                echo json_encode([
-                    'codigo' => 0,
-                    'mensaje' => 'Error interno del servidor'
-                ]);
-                return;
-            }
+            $permiso = self::fetchFirst($queryPermisos);
 
-            // Iniciar sesión
             session_start();
             $_SESSION['auth_user'] = true;
-            $_SESSION['usuario_id'] = $usuario->usuario_id;
-            $_SESSION['usuario_token'] = $nuevoToken;
-            $_SESSION['usuario_nombre'] = $usuario->usuario_nom1 . ' ' . $usuario->usuario_ape1;
+            $_SESSION['usuario_id'] = $usuarioDB['usuario_id'];
+            $_SESSION['usuario_correo'] = $usuarioDB['usuario_correo'];
+            $_SESSION['usuario_nombre'] = trim($usuarioDB['usuario_nom1'] . ' ' . $usuarioDB['usuario_ape1']);
             $_SESSION['login'] = true;
+
+            if ($permiso) {
+                $_SESSION['rol'] = $permiso['permiso_clave'];
+                $_SESSION['rol_nombre'] = $permiso['permiso_nombre'];
+            } else {
+                $_SESSION['rol'] = 'USER';
+                $_SESSION['rol_nombre'] = 'Usuario Básico';
+            }
 
             http_response_code(200);
             echo json_encode([
                 'codigo' => 1,
-                'mensaje' => 'Inicio de sesión exitoso',
+                'mensaje' => 'Usuario autenticado exitosamente',
                 'datos' => [
-                    'usuario_id' => $usuario->usuario_id,
-                    'nombre_completo' => $usuario->usuario_nom1 . ' ' . $usuario->usuario_ape1,
+                    'usuario_id' => $usuarioDB['usuario_id'],
+                    'usuario_correo' => $usuarioDB['usuario_correo'],
+                    'nombre_completo' => $_SESSION['usuario_nombre'],
+                    'rol' => $_SESSION['rol'],
                     'redirect_url' => '/proyecto011/'
                 ]
             ]);
+
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode([
@@ -140,24 +136,23 @@ class LoginController extends ActiveRecord
         getHeadersApi();
         session_start();
 
-        if (!isset($_SESSION['auth_user'])) {
+        if (isset($_SESSION['auth_user']) && $_SESSION['auth_user'] === true) {
+            http_response_code(200);
+            echo json_encode([
+                'codigo' => 1,
+                'mensaje' => 'Sesión activa',
+                'datos' => [
+                    'usuario_id' => $_SESSION['usuario_id'],
+                    'usuario_nombre' => $_SESSION['usuario_nombre'],
+                    'rol' => $_SESSION['rol']
+                ]
+            ]);
+        } else {
             http_response_code(401);
             echo json_encode([
                 'codigo' => 0,
-                'mensaje' => 'Sesión no válida',
-                'redirect_url' => '/proyecto011/login'
+                'mensaje' => 'Sesión inactiva'
             ]);
-            return;
         }
-
-        http_response_code(200);
-        echo json_encode([
-            'codigo' => 1,
-            'mensaje' => 'Sesión válida',
-            'datos' => [
-                'usuario_id' => $_SESSION['usuario_id'],
-                'nombre_completo' => $_SESSION['usuario_nombre']
-            ]
-        ]);
     }
 }

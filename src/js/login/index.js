@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const verificarSesionExistente = async () => {
   try {
-    const respuesta = await fetch("/proyecto11/login/verificarSesion", {
+    const respuesta = await fetch("/proyecto011/login/verificarSesion", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -26,7 +26,7 @@ const verificarSesionExistente = async () => {
     if (datos.codigo === 1) {
       console.log("Sesión activa detectada, redirigiendo...");
       setTimeout(() => {
-        window.location.href = "/proyecto11/inicio";
+        window.location.href = "/proyecto011/";
       }, 500);
     }
   } catch (error) {
@@ -34,7 +34,6 @@ const verificarSesionExistente = async () => {
   }
 };
 
-// Función para mostrar estado de carga
 const toggleLoadingState = (isLoading) => {
   if (isLoading) {
     btnLogin.disabled = true;
@@ -51,19 +50,16 @@ const toggleLoadingState = (isLoading) => {
   }
 };
 
-// Función para validar formato de email
 const validarEmail = (email) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 };
 
-// Función para limpiar estilos de validación
 const limpiarValidacion = () => {
   usuario_correo.classList.remove("is-invalid");
   usuario_contra.classList.remove("is-invalid");
 };
 
-// Función principal de login
 const loginAPI = async (e) => {
   e.preventDefault();
 
@@ -105,7 +101,7 @@ const loginAPI = async (e) => {
 
   try {
     const body = new FormData(formLogin);
-    const url = "/proyecto11/login/loginAPI";
+    const url = "/proyecto011/login/loginAPI";
     const config = {
       method: "POST",
       body,
@@ -131,7 +127,7 @@ const loginAPI = async (e) => {
     } else {
       toggleLoadingState(false);
 
-      if (mensaje.includes("Credenciales") || mensaje.includes("contraseña")) {
+      if (mensaje.includes("Credenciales")) {
         usuario_correo.classList.add("is-invalid");
         usuario_contra.classList.add("is-invalid");
       }
@@ -158,6 +154,7 @@ const loginAPI = async (e) => {
   }
 };
 
+// Event listeners
 formLogin.addEventListener("submit", loginAPI);
 usuario_correo.addEventListener("input", () => {
   usuario_correo.classList.remove("is-invalid");
@@ -181,6 +178,7 @@ usuario_contra.addEventListener("keypress", (e) => {
   }
 });
 
+// Función para cerrar sesión (exportada)
 export const cerrarSesion = async () => {
   const confirmacion = await Swal.fire({
     title: "¿Cerrar sesión?",
@@ -194,14 +192,14 @@ export const cerrarSesion = async () => {
   });
 
   if (confirmacion.isConfirmed) {
-    window.location.href = "/proyecto11/login/logout";
+    window.location.href = "/proyecto011/login/logout";
   }
 };
 
 // Verificar sesión cada 5 minutos
 setInterval(async () => {
   try {
-    const respuesta = await fetch("/proyecto11/login/verificarSesion");
+    const respuesta = await fetch("/proyecto011/login/verificarSesion");
     const datos = await respuesta.json();
 
     if (datos.codigo === 0) {
@@ -211,7 +209,7 @@ setInterval(async () => {
         text: "Su sesión ha expirado. Será redirigido al login.",
         confirmButtonText: "Entendido",
       });
-      window.location.href = "/proyecto11/login";
+      window.location.href = "/proyecto011/login";
     }
   } catch (error) {
     console.error("Error verificando sesión:", error);
