@@ -20,7 +20,7 @@ const login = async (e) => {
 
     try {
         const body = new FormData(FormLogin);
-        const url = '/proyecto01_macs/login';
+        const url = '/proyecto001/login';
         const config = {
             method: 'POST',
             body
@@ -46,7 +46,7 @@ const login = async (e) => {
             });
 
             FormLogin.reset();
-            location.href = '/proyecto01_macs/inicio';
+            location.href = '/proyecto001/inicio';
         } else {
             Swal.fire({
                 title: '¡Error!',
@@ -101,7 +101,7 @@ const logout = async () => {
                 }
             });
 
-            location.href = '/proyecto01_macs/logout';
+            location.href = '/proyecto001/logout';
         }
 
     } catch (error) {

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const seccionTabla = document.getElementById('seccionTabla');
 
     const cargarUsuarios = async () => {
-        const url = `/proyecto01_macs/asignacionpermisos/buscarUsuariosAPI`;
+        const url = `/proyecto001/asignacionpermisos/buscarUsuariosAPI`;
         const config = {
             method: 'GET'
         }
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const cargarAplicaciones = async () => {
-        const url = `/proyecto01_macs/asignacionpermisos/buscarAplicacionesAPI`;
+        const url = `/proyecto001/asignacionpermisos/buscarAplicacionesAPI`;
         const config = {
             method: 'GET'
         }
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const cargarTodosLosPermisos = async () => {
-        const url = `/proyecto01_macs/asignacionpermisos/buscarPermisosAPI`;
+        const url = `/proyecto001/asignacionpermisos/buscarPermisosAPI`;
         const config = {
             method: 'GET'
         }
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const cargarPermisos = async (app_id) => {
-        const url = `/proyecto01_macs/asignacionpermisos/buscarPermisosAPI?app_id=${app_id}`;
+        const url = `/proyecto001/asignacionpermisos/buscarPermisosAPI?app_id=${app_id}`;
         const config = {
             method: 'GET'
         }
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const body = new FormData(formAsignacion);
-        const url = "/proyecto01_macs/asignacionpermisos/guardarAPI";
+        const url = "/proyecto001/asignacionpermisos/guardarAPI";
         const config = {
             method: 'POST',
             body
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const BuscarAsignaciones = async () => {
-        const url = `/proyecto01_macs/asignacionpermisos/buscarAPI`;
+        const url = `/proyecto001/asignacionpermisos/buscarAPI`;
         const config = {
             method: 'GET'
         }
@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const body = new FormData(formAsignacion);
-        const url = '/proyecto01_macs/asignacionpermisos/modificarAPI';
+        const url = '/proyecto001/asignacionpermisos/modificarAPI';
         const config = {
             method: 'POST',
             body
@@ -456,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         if (AlertaConfirmarRevocar.isConfirmed) {
-            const url = `/proyecto01_macs/asignacionpermisos/revocar?id=${idAsignacion}`;
+            const url = `/proyecto001/asignacionpermisos/revocar?id=${idAsignacion}`;
             const config = {
                 method: 'GET'
             }

@@ -29,7 +29,7 @@ const guardarAplicacion = async e => {
     }
 
     const body = new FormData(formAplicacion);
-    const url = "/proyecto01_macs/aplicacion/guardarAPI";
+    const url = "/proyecto001/aplicacion/guardarAPI";
     const config = {
         method: 'POST',
         body
@@ -69,7 +69,7 @@ const guardarAplicacion = async e => {
 }
 
 const BuscarAplicaciones = async () => {
-    const url = `/proyecto01_macs/aplicacion/buscarAPI`;
+    const url = `/proyecto001/aplicacion/buscarAPI`;
     const config = {
         method: 'GET'
     }
@@ -222,7 +222,7 @@ const ModificarAplicacion = async (event) => {
     }
 
     const body = new FormData(formAplicacion);
-    const url = '/proyecto01_macs/aplicacion/modificarAPI';
+    const url = '/proyecto001/aplicacion/modificarAPI';
     const config = {
         method: 'POST',
         body
@@ -276,7 +276,7 @@ const EliminarAplicaciones = async (e) => {
     });
 
     if (AlertaConfirmarEliminar.isConfirmed) {
-        const url = `/proyecto01_macs/aplicacion/eliminar?id=${idAplicacion}`;
+        const url = `/proyecto001/aplicacion/eliminar?id=${idAplicacion}`;
         const config = {
             method: 'GET'
         }

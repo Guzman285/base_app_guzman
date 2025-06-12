@@ -16,7 +16,7 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="/proyecto01_macs/inicio">
+            <a class="navbar-brand" href="/proyecto001/inicio">
                 <img src="<?= asset('./images/cit.png') ?>" width="35px'" alt="cit" >
                 Aplicaciones
             </a>
@@ -24,28 +24,28 @@
                 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin: 0;">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/proyecto01_macs/inicio"><i class="bi bi-house-fill me-2"></i>Inicio</a>
+                        <a class="nav-link" aria-current="page" href="/proyecto001/inicio"><i class="bi bi-house-fill me-2"></i>Inicio</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link px-3" style="border: none; background: none;" href="/proyecto01_macs/usuarios">
+                        <a class="nav-link px-3" style="border: none; background: none;" href="/proyecto001/usuarios">
                             <i class="bi bi-people-fill me-2"></i>Usuarios
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" style="background: none;" href="/proyecto01_macs/aplicacion">
+                        <a class="nav-link px-3" style="background: none;" href="/proyecto001/aplicacion">
                             <i class="bi bi-grid-fill me-2"></i>Aplicaciones
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link px-3" style="background: none; border: none;" href="/proyecto01_macs/permisos">
+                        <a class="nav-link px-3" style="background: none; border: none;" href="/proyecto001/permisos">
                             <i class="bi bi-shield-lock-fill me-2"></i>Permisos
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link px-3" style="background: none; border: none;" href="/proyecto01_macs/asignacionpermisos">
+                        <a class="nav-link px-3" style="background: none; border: none;" href="/proyecto001/asignacionpermisos">
                             <i class="bi bi-shield-lock-fill me-2"></i>Asignación de Permisos
                         </a>
                     </li>
@@ -78,14 +78,14 @@
                     </div>
                     <div class="col-lg-2 d-grid mb-lg-0 mb-2">
                         <div class="d-flex gap-2">
-                            <a href="/proyecto01_macs/logout" class="btn btn-danger">
+                            <a href="/proyecto001/logout" class="btn btn-danger">
                                 <i class="bi bi-box-arrow-right"></i>Salir
                             </a>
                         </div>
                     </div>
                 <?php else: ?>
                     <div class="col-lg-1 d-grid mb-lg-0 mb-2">
-                        <a href="/proyecto01_macs/login" class="btn btn-primary">
+                        <a href="/proyecto001/login" class="btn btn-primary">
                             <i class="bi bi-box-arrow-in-right"></i>Login
                         </a>
                     </div>

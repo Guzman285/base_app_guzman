@@ -79,7 +79,7 @@ const guardarUsuario = async e => {
     }
 
     const body = new FormData(formUsuario);
-    const url = "/proyecto01_macs/usuarios/guardarAPI";
+    const url = "/proyecto001/usuarios/guardarAPI";
     const config = {
         method: 'POST',
         body
@@ -119,7 +119,7 @@ const guardarUsuario = async e => {
 }
 
 const BuscarUsuarios = async () => {
-    const url = `/proyecto01_macs/usuarios/buscarAPI`;
+    const url = `/proyecto001/usuarios/buscarAPI`;
     const config = {
         method: 'GET'
     }
@@ -321,7 +321,7 @@ const ModificarUsuario = async (event) => {
     }
 
     const body = new FormData(formUsuario);
-    const url = '/proyecto01_macs/usuarios/modificarAPI';
+    const url = '/proyecto001/usuarios/modificarAPI';
     const config = {
         method: 'POST',
         body
@@ -375,7 +375,7 @@ const EliminarUsuarios = async (e) => {
     });
 
     if (AlertaConfirmarEliminar.isConfirmed) {
-        const url = `/proyecto01_macs/usuarios/eliminar?id=${idUsuario}`;
+        const url = `/proyecto001/usuarios/eliminar?id=${idUsuario}`;
         const config = {
             method: 'GET'
         }
