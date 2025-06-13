@@ -14,9 +14,10 @@ class LoginController extends ActiveRecord
         $router->render('login/index', [], $layout = 'layout/layoutlogin');
     }
 
-    public static function login() {
+    public static function login()
+    {
         getHeadersApi();
-        
+
         try {
             $dpi = htmlspecialchars($_POST['usu_codigo']);
             $contrasena = htmlspecialchars($_POST['usu_password']);
@@ -33,22 +34,27 @@ class LoginController extends ActiveRecord
 
                     $nombreUser = $existeUsuario['usuario_nom1'];
                     $usuarioId = $existeUsuario['usuario_id'];
-                    
+
                     $_SESSION['user'] = $nombreUser;
                     $_SESSION['dpi'] = $dpi;
                     $_SESSION['usuario_id'] = $usuarioId;
 
                     // Consulta corregida según tu estructura real
-                    $sqlpermisos = "SELECT permiso_nombre FROM permiso 
-                                  WHERE usuario_id = $usuarioId 
-                                  AND permiso_situacion = 1";
+                    $sqlpermisos = "SELECT p.permiso_nombre 
+                FROM asig_permisos ap 
+                INNER JOIN permiso p ON ap.asignacion_permiso_id = p.permiso_id 
+                WHERE ap.asignacion_usuario_id = $usuarioId 
+                AND ap.asignacion_situacion = 1 
+                AND p.permiso_situacion = 1";
 
                     $permisos = ActiveRecord::fetchArray($sqlpermisos);
 
                     if (!empty($permisos)) {
                         $_SESSION['rol'] = $permisos[0]['permiso_nombre'];
+                        $_SESSION['permisos'] = array_column($permisos, 'permiso_nombre');
                     } else {
                         $_SESSION['rol'] = 'USUARIO_BASICO';
+                        $_SESSION['permisos'] = [];
                     }
 
                     echo json_encode([
@@ -76,11 +82,11 @@ class LoginController extends ActiveRecord
         }
     }
 
-public static function logout(){
-    isAuth();
-    $_SESSION = [];
-    $login = $_ENV['APP_NAME'];
-    header("Location: /$login");
-}
-
+    public static function logout()
+    {
+        isAuth();
+        $_SESSION = [];
+        $login = $_ENV['APP_NAME'];
+        header("Location: /$login");
+    }
 }
